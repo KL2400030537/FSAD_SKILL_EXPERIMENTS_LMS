@@ -1,0 +1,115 @@
+package com.example.hibernate.main;
+
+import org.hibernate.*;
+import org.hibernate.query.Query;
+import com.example.hibernate.entity.Product;
+import com.example.hibernate.util.HibernateUtil;
+
+import java.util.List;
+
+public class HQLDemo {
+
+public static void main(String[] args){
+
+	Session session = HibernateUtil.getSessionFactory().openSession();
+	Transaction tx = session.beginTransaction();
+
+
+
+	session.save(new Product("Laptop","Electronics",50000,5));
+	session.save(new Product("Phone","Electronics",20000,10));
+	session.save(new Product("Tablet","Electronics",15000,7));
+	session.save(new Product("Chair","Furniture",3000,20));
+	session.save(new Product("Desk","Furniture",7000,8));
+	session.save(new Product("Pen","Stationery",20,100));
+	session.save(new Product("Notebook","Stationery",50,60));
+
+
+Query<Product> q1 = session.createQuery(
+"FROM Product ORDER BY price ASC", Product.class);
+q1.list().forEach(p -> System.out.println(p.getName()+" "+p.getPrice()));
+
+
+
+Query<Product> q2 = session.createQuery(
+"FROM Product ORDER BY price DESC", Product.class);
+q2.list().forEach(p -> System.out.println(p.getName()+" "+p.getPrice()));
+
+
+
+Query<Product> q3 = session.createQuery(
+"FROM Product ORDER BY quantity DESC", Product.class);
+q3.list().forEach(p -> System.out.println(p.getName()+" "+p.getQuantity()));
+
+
+
+Query<Product> q4 = session.createQuery("FROM Product", Product.class);
+q4.setFirstResult(0);
+q4.setMaxResults(3);
+q4.list().forEach(p -> System.out.println(p.getName()));
+
+
+
+Query<Product> q5 = session.createQuery("FROM Product", Product.class);
+q5.setFirstResult(3);
+q5.setMaxResults(3);
+q5.list().forEach(p -> System.out.println(p.getName()));
+
+
+
+Long total = (Long) session.createQuery(
+"SELECT COUNT(*) FROM Product").uniqueResult();
+System.out.println("Total Products: "+total);
+
+
+
+Long available = (Long) session.createQuery(
+"SELECT COUNT(*) FROM Product WHERE quantity>0").uniqueResult();
+System.out.println("Available Products: "+available);
+
+
+
+Query<Object[]> q6 = session.createQuery(
+"SELECT description, COUNT(*) FROM Product GROUP BY description");
+for(Object[] row : q6.list()){
+System.out.println(row[0]+" -> "+row[1]);
+}
+
+
+
+Object[] priceStats = (Object[]) session.createQuery(
+"SELECT MIN(price), MAX(price) FROM Product").uniqueResult();
+System.out.println("Min Price: "+priceStats[0]);
+System.out.println("Max Price: "+priceStats[1]);
+
+
+
+Query<Product> q7 = session.createQuery(
+"FROM Product WHERE price BETWEEN 1000 AND 20000", Product.class);
+q7.list().forEach(p -> System.out.println(p.getName()));
+
+
+
+
+
+Query<Product> q8 = session.createQuery(
+"FROM Product WHERE name LIKE 'P%'", Product.class);
+
+
+Query<Product> q9 = session.createQuery(
+"FROM Product WHERE name LIKE '%k'", Product.class);
+
+
+Query<Product> q10 = session.createQuery(
+"FROM Product WHERE name LIKE '%top%'", Product.class);
+
+
+Query<Product> q11 = session.createQuery(
+"FROM Product WHERE LENGTH(name)=5", Product.class);
+
+
+tx.commit();
+session.close();
+
+}
+}

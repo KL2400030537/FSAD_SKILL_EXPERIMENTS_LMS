@@ -1,0 +1,17 @@
+package com.example.model;
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class Certification {
+
+    private int id = 501;
+    private String name = "Spring Certification";
+    private String dateOfCompletion = "2026-03-15";
+
+    public void showCertification() {
+        System.out.println("Certification ID: " + id);
+        System.out.println("Certification Name: " + name);
+        System.out.println("Completion Date: " + dateOfCompletion);
+    }
+}
