@@ -1,0 +1,2 @@
+This file is created for SKILL-1 Git Version Control experiment.
+Practicing basic Git commands.
