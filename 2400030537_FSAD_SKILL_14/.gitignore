@@ -1,0 +1,13 @@
+ 
+# IDE files 
+.metadata/ 
+*.log 
+*.lock 
+# OS files 
+.DS_Store 
+Thumbs.db 
+# Node 
+node_modules/ 
+# Build 
+target/ 
+build/ 
